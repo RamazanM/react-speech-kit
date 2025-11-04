@@ -11,6 +11,12 @@
     "deploy-demo": "gh-pages -d examples/dist",
     "publish-demo": "npm run build-demo && npm run deploy-demo"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
   "author": "Michael Parton",
   "license": "MIT",
   "peerDependencies": {
