@@ -23,10 +23,14 @@ const useEventCallback = (fn, dependencies) => {
     ref.current = fn;
   }, [fn, ...dependencies]);
 
-  return useCallback((args) => {
-    const fn = ref.current;
-    return fn(args);
-  }, [ref]);
+  return useCallback(
+    (args) => {
+      // eslint-disable-next-line no-shadow
+      const fn = ref.current;
+      return fn(args);
+    },
+    [ref]
+  );
 };
 
 const useSpeechRecognition = (props = {}) => {
@@ -52,30 +56,33 @@ const useSpeechRecognition = (props = {}) => {
     onError(event);
   };
 
-  const listen = useEventCallback((args = {}) => {
-    if (listening || !supported) return;
-    const {
-      lang = '',
-      interimResults = true,
-      continuous = false,
-      maxAlternatives = 1,
-      grammars,
-    } = args;
-    setListening(true);
-    recognition.current.lang = lang;
-    recognition.current.interimResults = interimResults;
-    recognition.current.onresult = processResult;
-    recognition.current.onerror = handleError;
-    recognition.current.continuous = continuous;
-    recognition.current.maxAlternatives = maxAlternatives;
-    if (grammars) {
-      recognition.current.grammars = grammars;
-    }
-    // SpeechRecognition stops automatically after inactivity
-    // We want it to keep going until we tell it to stop
-    recognition.current.onend = () => recognition.current.start();
-    recognition.current.start();
-  }, [listening, supported, recognition]);
+  const listen = useEventCallback(
+    (args = {}) => {
+      if (listening || !supported) return;
+      const {
+        lang = '',
+        interimResults = true,
+        continuous = false,
+        maxAlternatives = 1,
+        grammars,
+      } = args;
+      setListening(true);
+      recognition.current.lang = lang;
+      recognition.current.interimResults = interimResults;
+      recognition.current.onresult = processResult;
+      recognition.current.onerror = handleError;
+      recognition.current.continuous = continuous;
+      recognition.current.maxAlternatives = maxAlternatives;
+      if (grammars) {
+        recognition.current.grammars = grammars;
+      }
+      // SpeechRecognition stops automatically after inactivity
+      // We want it to keep going until we tell it to stop
+      recognition.current.onend = () => recognition.current.start();
+      recognition.current.start();
+    },
+    [listening, supported, recognition]
+  );
 
   const stop = useEventCallback(() => {
     if (!listening || !supported) return;

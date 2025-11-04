@@ -5,7 +5,7 @@ module.exports = {
   entry: path.join(__dirname, 'examples/src/index.jsx'),
   output: {
     path: path.join(__dirname, 'examples/dist'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
   module: {
     rules: [
@@ -14,34 +14,32 @@ module.exports = {
         exclude: /node_modules/,
         resolve: { extensions: ['.js', '.jsx'] },
         use: {
-          loader: 'babel-loader'
-        }
+          loader: 'babel-loader',
+        },
       },
       {
         test: /\.html$/,
         use: [
           {
             loader: 'html-loader',
-            options: { minimize: true }
-          }
-        ]
+            options: { minimize: true },
+          },
+        ],
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: [
-          'file-loader'
-        ]
-      }
-    ]
+        use: ['file-loader'],
+      },
+    ],
   },
   plugins: [
     new HtmlWebPackPlugin({
       template: './examples/src/index.html',
-      filename: './index.html',
-      favicon: 'examples/src/images/favicon.ico'
-    })
+      filename: 'index.html',
+      favicon: 'examples/src/images/favicon.ico',
+    }),
   ],
   devServer: {
-    port: 3007
-  }
+    port: 3007,
+  },
 };
